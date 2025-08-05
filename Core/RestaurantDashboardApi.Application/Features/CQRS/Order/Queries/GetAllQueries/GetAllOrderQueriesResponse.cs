@@ -17,5 +17,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Order.Queries.GetAllQ
         public string OrderStatusName { get; set; }
         public int WaiterId     { get; set; }
         public string WaiterName { get;set; }
+        public string DeskName { get; set; }
+        public string OrderNotes { get; set; }
     }
 }

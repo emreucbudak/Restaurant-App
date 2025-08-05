@@ -38,7 +38,7 @@ namespace RestaurantDashboardApi.API.Controllers
         }
         // PUT: api/Desks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> PutDesk(UpdateDeskCommandRequest request)
         {
             await _context.Send(request); // Değişkene atama yok
@@ -60,9 +60,10 @@ namespace RestaurantDashboardApi.API.Controllers
 
         // DELETE: api/Desks/5
         [Authorize(Roles = "RestaurantCase")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDesk(DeleteDeskCommandRequest id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteDesk(string nms)
         {
+            DeleteDeskCommandRequest id = new() { Name = nms };
             await _context.Send(id);
 
             return Ok();

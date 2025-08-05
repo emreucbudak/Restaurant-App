@@ -83,19 +83,16 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RestaurantsCase",
+                name: "Restaurants",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RestaurantName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RestaurantsCase", x => x.Id);
+                    table.PrimaryKey("PK_Restaurants", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,6 +109,19 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SystemAdmins", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "waiterWorkStatuses",
+                columns: table => new
+                {
+                    WaiterWorkStatusId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WaiterWorkStatusName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_waiterWorkStatuses", x => x.WaiterWorkStatusId);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,26 +231,6 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Restaurants",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RestaurantName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RestaurantCaseId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Restaurants", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Restaurants_RestaurantsCase_RestaurantCaseId",
-                        column: x => x.RestaurantCaseId,
-                        principalTable: "RestaurantsCase",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Desks",
                 columns: table => new
                 {
@@ -257,8 +247,7 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         name: "FK_Desks_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -270,8 +259,8 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductPrice = table.Column<int>(type: "int", nullable: false),
-                    ProductCategoryId = table.Column<int>(type: "int", nullable: false),
-                    RestaurantId = table.Column<int>(type: "int", nullable: true)
+                    RestaurantId = table.Column<int>(type: "int", nullable: false),
+                    ProductCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -290,6 +279,29 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RestaurantsCase",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RestaurantId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RestaurantsCase", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RestaurantsCase_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Waiters",
                 columns: table => new
                 {
@@ -299,7 +311,9 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RestaurantId = table.Column<int>(type: "int", nullable: true)
+                    RestaurantId = table.Column<int>(type: "int", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WaiterWorkStatusId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -309,6 +323,12 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Waiters_waiterWorkStatuses_WaiterWorkStatusId",
+                        column: x => x.WaiterWorkStatusId,
+                        principalTable: "waiterWorkStatuses",
+                        principalColumn: "WaiterWorkStatusId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -321,11 +341,21 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                     OrderStatusId = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     WaiterId = table.Column<int>(type: "int", nullable: false),
-                    UpdatedAt = table.Column<TimeSpan>(type: "time", nullable: true)
+                    UpdatedAt = table.Column<TimeSpan>(type: "time", nullable: true),
+                    OrderNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsCanceled = table.Column<bool>(type: "bit", nullable: false),
+                    DeskId = table.Column<int>(type: "int", nullable: false),
+                    IsHidden = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Desks_DeskId",
+                        column: x => x.DeskId,
+                        principalTable: "Desks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Orders_OrderStatus_OrderStatusId",
                         column: x => x.OrderStatusId,
@@ -350,7 +380,7 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TotalPrice = table.Column<int>(type: "int", nullable: false),
-                    DeskId = table.Column<int>(type: "int", nullable: false)
+                    DeskId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -359,14 +389,12 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         name: "FK_OrderItems_Desks_DeskId",
                         column: x => x.DeskId,
                         principalTable: "Desks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderItems_Products_ProductId",
                         column: x => x.ProductId,
@@ -411,6 +439,16 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                     { 6, "Sıcak İçecekler" },
                     { 7, "Soğuk İçecekler" },
                     { 8, "Pideler" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "waiterWorkStatuses",
+                columns: new[] { "WaiterWorkStatusId", "WaiterWorkStatusName" },
+                values: new object[,]
+                {
+                    { 1, "Aktif" },
+                    { 2, "İzinli" },
+                    { 3, "Molada" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -473,6 +511,11 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_DeskId",
+                table: "Orders",
+                column: "DeskId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_OrderStatusId",
                 table: "Orders",
                 column: "OrderStatusId");
@@ -493,14 +536,19 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Restaurants_RestaurantCaseId",
-                table: "Restaurants",
-                column: "RestaurantCaseId");
+                name: "IX_RestaurantsCase_RestaurantId",
+                table: "RestaurantsCase",
+                column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Waiters_RestaurantId",
                 table: "Waiters",
                 column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Waiters_WaiterWorkStatusId",
+                table: "Waiters",
+                column: "WaiterWorkStatusId");
         }
 
         /// <inheritdoc />
@@ -525,6 +573,9 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
+                name: "RestaurantsCase");
+
+            migrationBuilder.DropTable(
                 name: "SystemAdmins");
 
             migrationBuilder.DropTable(
@@ -534,13 +585,13 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Desks");
-
-            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Desks");
 
             migrationBuilder.DropTable(
                 name: "OrderStatus");
@@ -555,7 +606,7 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                 name: "Restaurants");
 
             migrationBuilder.DropTable(
-                name: "RestaurantsCase");
+                name: "waiterWorkStatuses");
         }
     }
 }

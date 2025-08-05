@@ -13,13 +13,15 @@ namespace RestaurantDashboardApi.Domain.Entities
         {
         }
 
-        public Waiter(string name, string surname, string email, string password, int? restaurantId)
+        public Waiter(string name, string surname, string email, string password, int? restaurantId, string phoneNumber, int waiterWorkStatusId)
         {
             Name = name;
             Surname = surname;
             Email = email;
             Password = password;
             RestaurantId = restaurantId;
+            PhoneNumber = phoneNumber;
+            WaiterWorkStatusId = waiterWorkStatusId;
         }
 
         public string Name { get; set; }
@@ -29,6 +31,9 @@ namespace RestaurantDashboardApi.Domain.Entities
         public int? RestaurantId { get; set; }
         public Restaurant Restaurant { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public string PhoneNumber { get; set; }
+        public int WaiterWorkStatusId   { get; set; }
+        public WaiterWorkStatus WaiterWorkStatus { get; set; }
 
     }
 }

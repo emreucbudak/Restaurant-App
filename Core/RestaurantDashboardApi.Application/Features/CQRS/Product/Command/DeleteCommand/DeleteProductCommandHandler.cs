@@ -20,7 +20,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Product.Command.Delet
 
         public async Task Handle(DeleteProductCommandRequest request, CancellationToken cancellationToken)
         {
-            var getDesk = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Product>().GetByExpression(false, b => b.Id == request.ProductId).FirstOrDefaultAsync();
+            var getDesk = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Product>().GetByExpression(false, b => b.ProductName.Trim().ToLower() == request.ProductName.Trim().ToLower() ).FirstOrDefaultAsync();
             await unitOfWork.GetWriteRepository<RestaurantDashboardApi.Domain.Entities.Product>().DeleteAsync(getDesk);
             await unitOfWork.SaveAsync();
         }

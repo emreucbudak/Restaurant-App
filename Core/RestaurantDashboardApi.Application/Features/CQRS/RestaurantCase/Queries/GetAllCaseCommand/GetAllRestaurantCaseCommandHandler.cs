@@ -24,6 +24,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.RestaurantCase.Querie
         public async Task<IList<GetAllRestaurantCaseCommandResponse>> Handle(GetAllRestaurantCaseCommandRequest request, CancellationToken cancellationToken)
         {
             var getAllRestaurantCase = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.RestaurantCase>().GetAllAsync();
+
             var getAllRestaurantCases =  autoMapper.Map<List<GetAllRestaurantCaseCommandResponse>>(getAllRestaurantCase);
             return getAllRestaurantCases;
         }

@@ -23,6 +23,9 @@ namespace RestaurantDashboardApi.Domain.Entities
         public int RestaurantId { get; set; }
         public Restaurant Restaurant {  get; set; }
         public bool IsFull { get; set; } = false;
-        public ICollection<OrderItem> Items { get; set; }   
+        public int OrderId { get; set; }
+        public Order Order { get; set; }
+  
+
     }
 }

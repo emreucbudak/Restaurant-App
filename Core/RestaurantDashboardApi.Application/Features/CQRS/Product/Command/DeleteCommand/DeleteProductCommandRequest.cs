@@ -9,6 +9,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Product.Command.Delet
 {
     public class DeleteProductCommandRequest : IRequest
     {
-        public int ProductId { get; set; }
+        public int RestaurantId { get; set; }
+        public string ProductName { get; set; }
     }
 }

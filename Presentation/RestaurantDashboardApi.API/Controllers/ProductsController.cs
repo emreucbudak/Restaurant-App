@@ -11,6 +11,7 @@ using RestaurantDashboardApi.Application.Features.CQRS.Product.Command.CreateCom
 using RestaurantDashboardApi.Application.Features.CQRS.Product.Command.DeleteCommand;
 using RestaurantDashboardApi.Application.Features.CQRS.Product.Command.UpdateCommand;
 using RestaurantDashboardApi.Application.Features.CQRS.Product.Queries;
+
 using RestaurantDashboardApi.Domain.Entities;
 using RestaurantDashboardApi.Persistence.AppDbContext;
 
@@ -30,13 +31,15 @@ namespace RestaurantDashboardApi.API.Controllers
         // GET: api/Products
         [Authorize(Roles ="RestaurantCase, Waiter")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(GetAllProductCommandRequest req)
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
+            GetAllProductCommandRequest req = new();
 
             return Ok(await _context.Send(req));
         }
 
- 
+
+
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -58,7 +61,7 @@ namespace RestaurantDashboardApi.API.Controllers
         }
 
         // DELETE: api/Products/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteProduct(DeleteProductCommandRequest id)
         {
             await _context.Send(id);

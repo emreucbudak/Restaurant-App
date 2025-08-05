@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RestaurantDashboardApi.Application.Features.CQRS.RestaurantCase.Command.CreateRestaurantCaseCommand;
+
+using RestaurantDashboardApi.Application.Features.CQRS.RestaurantCase.Queries.GetAllCaseByEmailCommand;
 using RestaurantDashboardApi.Application.Features.CQRS.RestaurantCase.Queries.GetAllCaseCommand;
 using RestaurantDashboardApi.Domain.Entities;
 using RestaurantDashboardApi.Persistence.AppDbContext;
@@ -26,7 +27,6 @@ namespace RestaurantDashboardApi.API.Controllers
         }
 
         // GET: api/RestaurantCases
-        [Authorize(Roles ="Waiter")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RestaurantCase>>> GetRestaurantsCase()
         {
@@ -36,14 +36,12 @@ namespace RestaurantDashboardApi.API.Controllers
 
 
 
-        // POST: api/RestaurantCases
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<RestaurantCase>> PostRestaurantCase(CreateRestaurantCaseCommandRequest restaurantCase)
+        [HttpGet("email")]
+        public async Task<ActionResult<GetAllCaseByEmailResponse>> GetRestaurantsCasesById([FromQuery] GetAllCaseByEmailRequest gtr)
         {
-            await _context.Send(restaurantCase);
-            return Ok();
+            return Ok(gtr);
         }
+
 
 
     }

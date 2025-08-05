@@ -13,7 +13,7 @@ namespace RestaurantDashboardApi.Domain.Entities
         {
         }
 
-        public OrderItem(int orderId, int productId, int quantity, int totalPrice, int deskId)
+        public OrderItem(int orderId, int productId, int quantity, int totalPrice)
         {
             OrderId = orderId;
 
@@ -21,18 +21,20 @@ namespace RestaurantDashboardApi.Domain.Entities
 
             Quantity = quantity;
             TotalPrice = totalPrice;
-            DeskId = deskId;
+
 
         }
 
-        public int OrderId  { get; set; }
-        public Order Order { get; set; }
-        public int ProductId { get; set; }
 
-        public Product Product { get; set; }
+
+        public int OrderId { get; set; }
+        public Order Order { get; set; }  // Order ile ilişki
+
+        public int ProductId { get; set; }
+        public Product Product { get; set; }  // Product ile ilişki
+
         public int Quantity { get; set; }
         public int TotalPrice { get; set; }
-        public int DeskId   { get; set; }
-        public Desk Desk { get; set; }
+
     }
 }

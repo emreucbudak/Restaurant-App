@@ -13,7 +13,6 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.OrderItem.Command.Cre
         public int TotalPrice { get; set; }
         public int DeskId { get; set; }
         public int ProductId { get; set; }
-
-        public int OrderId { get; set; }
+        public int OrderId { get; set; } // Sipariş ID'si, siparişin zaten var olduğunu varsayıyoruz
     }
 }

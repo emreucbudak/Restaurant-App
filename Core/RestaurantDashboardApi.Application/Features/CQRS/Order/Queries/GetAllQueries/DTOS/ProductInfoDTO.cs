@@ -10,6 +10,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Order.Queries.GetAllQ
     {
         public string ProductName { get; set; }
         public int ProductPrice { get; set; }
+        public int Quentity { get; set; }
     }
 
 }

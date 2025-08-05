@@ -30,6 +30,8 @@ namespace RestaurantDashboardApi.Persistence.AppDbContext
         public DbSet<RestaurantCase> RestaurantsCase { get; set; }
         public DbSet<SystemAdmin> SystemAdmins { get; set; }
         public DbSet<Waiter> Waiters { get; set; }
+        public DbSet<WaiterWorkStatus> waiterWorkStatuses { get; set; }
+  
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,18 +41,33 @@ namespace RestaurantDashboardApi.Persistence.AppDbContext
             modelBuilder.Entity<Waiter>().HasKey(x => x.Id);
             modelBuilder.Entity<RestaurantCase>().HasKey(x => x.Id);
 
-            modelBuilder.Entity<OrderItem>()
-    .HasOne(oi => oi.Desk)
-    .WithMany(d => d.Items)  // Desk entity’sinde OrderItems koleksiyonu olmalı
-    .HasForeignKey(oi => oi.DeskId)
-    .OnDelete(DeleteBehavior.Cascade); // ya da NoAction, ihtiyaca göre
+; // ya da NoAction, ihtiyaca göre
             modelBuilder.Entity<Desk>()
     .HasOne(d => d.Restaurant)
     .WithMany(r => r.Desks)
     .HasForeignKey(d => d.RestaurantId)
-    .OnDelete(DeleteBehavior.Cascade);
+    .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.Entity<Product>()
+        .HasOne(p => p.Restaurant)
+        .WithMany(r => r.Products)
+        .HasForeignKey(p => p.RestaurantId)
+        .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Order>()
+        .HasMany(o => o.OrderItems)
+        .WithOne(oi => oi.Order)
+        .HasForeignKey(oi => oi.OrderId)
+        .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Desk>()
+    .HasOne(d => d.Order)
+    .WithOne(o => o.Desk)
+    .HasForeignKey<Order>(o => o.DeskId)
+    .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
-}
+
+
+    }
+

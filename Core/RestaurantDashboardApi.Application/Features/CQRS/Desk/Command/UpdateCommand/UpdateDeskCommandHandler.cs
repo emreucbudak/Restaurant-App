@@ -21,9 +21,8 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Desk.Command.UpdateCo
 
         public async Task Handle(UpdateDeskCommandRequest request, CancellationToken cancellationToken)
         {
-            var getDesk = await _unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Desk>().GetByExpression(true,b=> b.Id == request.Id).FirstOrDefaultAsync();
+            var getDesk = await _unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Desk>().GetByExpression(true,b=> b.DeskName.Trim().ToLower() == request.DeskName.Trim().ToLower() && b.RestaurantId == request.RestaurantId).FirstOrDefaultAsync();
             getDesk.IsFull = request.IsFull;
-            getDesk.DeskName = request.DeskName;
             await _unitOfWork.GetWriteRepository<RestaurantDashboardApi.Domain.Entities.Desk>().UpdateAsync(getDesk);
             await _unitOfWork.SaveAsync();
         }
