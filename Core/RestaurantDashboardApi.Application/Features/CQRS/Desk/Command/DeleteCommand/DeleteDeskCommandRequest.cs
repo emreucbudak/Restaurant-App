@@ -9,6 +9,6 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Desk.Command.DeleteCo
 {
     public class DeleteDeskCommandRequest : IRequest
     {
-        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -16,12 +16,9 @@ namespace RestaurantDashboardApi.Domain.Entities
         public Restaurant(string restaurantName, int restaurantCaseId)
         {
             RestaurantName = restaurantName;
-            RestaurantCaseId = restaurantCaseId;
         }
 
         public string RestaurantName { get; set; }
-        public int RestaurantCaseId { get; set; }   
-        public RestaurantCase RestaurantCase { get; set; }
         public ICollection<Desk>? Desks { get; set; }
         public ICollection<Product>? Products { get; set; }
         public ICollection<Waiter>? Waiters { get; set; }

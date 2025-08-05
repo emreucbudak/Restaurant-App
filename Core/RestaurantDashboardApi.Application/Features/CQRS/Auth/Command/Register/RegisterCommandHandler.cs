@@ -35,7 +35,6 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Auth.Command.Register
         {
             await authRules.UserShouldNotBeExist(await userManager.FindByEmailAsync(request.Email));
 
-
             User user = mapper.Map<User>(request);
 
             user.UserName = request.Email;
@@ -55,7 +54,8 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Auth.Command.Register
                 await userManager.AddToRoleAsync(user, request.Role);
             }
             request.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(request.Password);
-            var (entity, entityType) = EntityFactory.CreateEntity(request.Role, request.Name, request.Surname, request.Email, request.Password);
+
+            var (entity, entityType) = EntityFactory.CreateEntity(request.Role, request.Name, request.Surname, request.Email, request.Password,request.RestaurantId,request.PhoneNumber,1);
             var interfaceType = typeof(IUnitOfWork);
             var methodInfo = interfaceType.GetMethod("GetWriteRepository");
             if (methodInfo == null)

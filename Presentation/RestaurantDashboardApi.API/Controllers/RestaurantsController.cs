@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantDashboardApi.Application.Features.CQRS.Restaurant.Command.CreateCommand;
 using RestaurantDashboardApi.Application.Features.CQRS.Restaurant.Command.DeleteCommand;
+using RestaurantDashboardApi.Application.Features.CQRS.Restaurant.Command.DeleteCommand.DeleteProductFromRestaurant;
+using RestaurantDashboardApi.Application.Features.CQRS.Restaurant.Queries.GetAllQueries.RestaurantFoods;
 using RestaurantDashboardApi.Application.Features.CQRS.RestaurantCase.Queries.GetAllCaseCommand;
 using RestaurantDashboardApi.Domain.Entities;
 using RestaurantDashboardApi.Persistence.AppDbContext;
@@ -15,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace RestaurantDashboardApi.API.Controllers
 {
-    [Authorize(Roles ="SystemAdmin")]
+    [Authorize(Roles = "Waiter,RestaurantCase")]
     [Route("api/[controller]")]
     [ApiController]
     public class RestaurantsController : ControllerBase
@@ -35,6 +37,14 @@ namespace RestaurantDashboardApi.API.Controllers
             return Ok(await _context.Send(req));
         }
 
+        [HttpGet("getproductsbycategories")]
+        public async Task<ActionResult<IEnumerable<Restaurant>>> GetRestaurantsFood(int Id)
+        {
+            GetAllFoodsFromRestaurantRequest req = new() { Id = Id };
+            return Ok(await _context.Send(req));
+        }
+
+
         // POST: api/Restaurants
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -53,6 +63,14 @@ namespace RestaurantDashboardApi.API.Controllers
 
             return NoContent();
         }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteRestaurantss(DeleteProductFromRestaurantRequest id)
+        {
+            await _context.Send(id);
+
+            return NoContent();
+        }
+
 
 
     }

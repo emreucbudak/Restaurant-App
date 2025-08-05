@@ -28,8 +28,9 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Order.Queries.GetAllQ
             var finishedOrders = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Order>()
                 .GetAllAsync(include: x => x
                     .Include(f => f.OrderStatus)
-                    .Include(f => f.Items)
-                        .ThenInclude(i => i.Product).Include(x => x.Waiter));
+                    .Include(f => f.OrderItems)
+                        .ThenInclude(i => i.Product).Include(x => x.Waiter).ThenInclude(x=> x.Restaurant).Include(x=> x.Desk),predicate:x=> x.Waiter.RestaurantId == request.RestaurantId && x.IsHidden == false);
+
 
             var response = finishedOrders.Select(f => new GetAllOrderQueriesResponse
             {
@@ -38,15 +39,18 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Order.Queries.GetAllQ
                 OrderStatusName = f.OrderStatus.StatusName,
                 UpdatedAt = f.UpdatedAt,
                 TotalPrice = f.TotalPrice,
-                Products = f.Items.Select(b => new ProductInfoDTO
+                Products = f.OrderItems.Select(x => new RestaurantDashboardApi.Application.Features.CQRS.Order.Queries.GetAllQueries.DTOS.ProductInfoDTO
                 {
-                    ProductName = b.Product.ProductName,
-                    ProductPrice = b.Product.ProductPrice
+                    ProductName = x.Product.ProductName,
+                    ProductPrice = x.Product.ProductPrice,
+                    Quentity = x.Quantity
                 }).ToList(),
                 WaiterId = f.WaiterId,
-                WaiterName = f.Waiter.Name+ " " + f.Waiter.Surname
-                
+                WaiterName = f.Waiter.Name + " " + f.Waiter.Surname,
+                DeskName = f.Desk.DeskName,
+                OrderNotes = f.OrderNote
             }).ToList();
+
 
             return response;
         }

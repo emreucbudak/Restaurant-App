@@ -25,7 +25,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Waiter.Queries
 
         public async Task<IList<GetAllWaiterCommandResponse>> Handle(GetAllWaiterCommandRequest request, CancellationToken cancellationToken)
         {
-            var tr = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Waiter>().GetByExpression(false , b=> b.RestaurantId == request.RestaurantId).ToListAsync();
+            var tr = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Waiter>().GetByExpression(false , b=> b.RestaurantId == request.RestaurantId).Include(b => b.WaiterWorkStatus).ToListAsync();
 
             
             var ds = autoMapper.Map<IList<GetAllWaiterCommandResponse>>(tr);

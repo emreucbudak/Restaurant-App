@@ -21,7 +21,8 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Desk.Command.DeleteCo
 
         public async Task Handle(DeleteDeskCommandRequest request, CancellationToken cancellationToken)
         {
-            var getDesk = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Desk>().GetByExpression(false,b => b.Id == request.Id).FirstOrDefaultAsync();
+            var st = request.Name.Trim().ToLower();
+            var getDesk = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.Desk>().GetByExpression(false,b => b.DeskName.Trim().ToLower() == st).FirstOrDefaultAsync();
             await unitOfWork.GetWriteRepository<RestaurantDashboardApi.Domain.Entities.Desk>().DeleteAsync(getDesk);
             await unitOfWork.SaveAsync();
         }

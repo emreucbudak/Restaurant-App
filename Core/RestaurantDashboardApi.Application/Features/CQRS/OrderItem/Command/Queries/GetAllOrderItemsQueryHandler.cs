@@ -23,7 +23,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.OrderItem.Command.Que
         {
             var finishedOrders = await unitOfWork.GetReadRepository<RestaurantDashboardApi.Domain.Entities.OrderItem>()
                 .GetAllAsync(include: x => x.Include(f => f.Order)
-                                            .Include(f => f.Desk).Include(f => f.Product));
+                                            .Include(f => f.Product));
 
             var response = finishedOrders.Select(f => new GetAllOrderItemQueryResponse
             {
@@ -31,7 +31,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.OrderItem.Command.Que
                 ProductName  = f.Product.ProductName,
                 Quantity = f.Quantity,
                 TotalPrice  = f.TotalPrice,
-                DeskName = f.Desk.DeskName
+
             }).ToList();
 
             return response;

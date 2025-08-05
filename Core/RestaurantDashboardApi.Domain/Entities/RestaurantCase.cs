@@ -13,18 +13,21 @@ namespace RestaurantDashboardApi.Domain.Entities
         {
         }
 
-        public RestaurantCase(string caseName, string caseSurname, string caseEmail, string casePassword)
+        public RestaurantCase(string caseName, string caseSurname, string caseEmail, string casePassword, int restaurantId)
         {
             Name = caseName;
             Surname = caseSurname;
             Email = caseEmail;
             Password = casePassword;
+            RestaurantId = restaurantId;
         }
 
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public int RestaurantId { get; set; }
+        public Restaurant Restaurant { get; set; }
 
     }
 }

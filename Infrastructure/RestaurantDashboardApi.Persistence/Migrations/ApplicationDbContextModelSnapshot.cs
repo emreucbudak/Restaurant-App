@@ -140,6 +140,9 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                     b.Property<bool>("IsFull")
                         .HasColumnType("bit");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
@@ -158,8 +161,20 @@ namespace RestaurantDashboardApi.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("DeskId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsHidden")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNote")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
@@ -174,6 +189,9 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DeskId")
+                        .IsUnique();
 
                     b.HasIndex("OrderStatusId");
 
@@ -190,9 +208,6 @@ namespace RestaurantDashboardApi.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DeskId")
-                        .HasColumnType("int");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
@@ -206,8 +221,6 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeskId");
 
                     b.HasIndex("OrderId");
 
@@ -287,7 +300,7 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                     b.Property<int>("ProductPrice")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RestaurantId")
+                    b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -366,16 +379,11 @@ namespace RestaurantDashboardApi.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("RestaurantCaseId")
-                        .HasColumnType("int");
-
                     b.Property<string>("RestaurantName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RestaurantCaseId");
 
                     b.ToTable("Restaurants");
                 });
@@ -400,11 +408,16 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
 
                     b.ToTable("RestaurantsCase");
                 });
@@ -589,6 +602,10 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("RestaurantId")
                         .HasColumnType("int");
 
@@ -596,11 +613,50 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("WaiterWorkStatusId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RestaurantId");
 
+                    b.HasIndex("WaiterWorkStatusId");
+
                     b.ToTable("Waiters");
+                });
+
+            modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.WaiterWorkStatus", b =>
+                {
+                    b.Property<int>("WaiterWorkStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WaiterWorkStatusId"));
+
+                    b.Property<string>("WaiterWorkStatusName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WaiterWorkStatusId");
+
+                    b.ToTable("waiterWorkStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            WaiterWorkStatusId = 1,
+                            WaiterWorkStatusName = "Aktif"
+                        },
+                        new
+                        {
+                            WaiterWorkStatusId = 2,
+                            WaiterWorkStatusName = "İzinli"
+                        },
+                        new
+                        {
+                            WaiterWorkStatusId = 3,
+                            WaiterWorkStatusName = "Molada"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -659,7 +715,7 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                     b.HasOne("RestaurantDashboardApi.Domain.Entities.Restaurant", "Restaurant")
                         .WithMany("Desks")
                         .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Restaurant");
@@ -667,6 +723,12 @@ namespace RestaurantDashboardApi.Persistence.Migrations
 
             modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.Order", b =>
                 {
+                    b.HasOne("RestaurantDashboardApi.Domain.Entities.Desk", "Desk")
+                        .WithOne("Order")
+                        .HasForeignKey("RestaurantDashboardApi.Domain.Entities.Order", "DeskId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("RestaurantDashboardApi.Domain.Entities.OrderStatus", "OrderStatus")
                         .WithMany()
                         .HasForeignKey("OrderStatusId")
@@ -679,6 +741,8 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Desk");
+
                     b.Navigation("OrderStatus");
 
                     b.Navigation("Waiter");
@@ -686,16 +750,10 @@ namespace RestaurantDashboardApi.Persistence.Migrations
 
             modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("RestaurantDashboardApi.Domain.Entities.Desk", "Desk")
-                        .WithMany("Items")
-                        .HasForeignKey("DeskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RestaurantDashboardApi.Domain.Entities.Order", "Order")
-                        .WithMany("Items")
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("RestaurantDashboardApi.Domain.Entities.Product", "Product")
@@ -703,8 +761,6 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Desk");
 
                     b.Navigation("Order");
 
@@ -719,22 +775,26 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RestaurantDashboardApi.Domain.Entities.Restaurant", null)
+                    b.HasOne("RestaurantDashboardApi.Domain.Entities.Restaurant", "Restaurant")
                         .WithMany("Products")
-                        .HasForeignKey("RestaurantId");
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("ProductCategory");
+
+                    b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.Restaurant", b =>
+            modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.RestaurantCase", b =>
                 {
-                    b.HasOne("RestaurantDashboardApi.Domain.Entities.RestaurantCase", "RestaurantCase")
+                    b.HasOne("RestaurantDashboardApi.Domain.Entities.Restaurant", "Restaurant")
                         .WithMany()
-                        .HasForeignKey("RestaurantCaseId")
+                        .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("RestaurantCase");
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.Waiter", b =>
@@ -743,17 +803,26 @@ namespace RestaurantDashboardApi.Persistence.Migrations
                         .WithMany("Waiters")
                         .HasForeignKey("RestaurantId");
 
+                    b.HasOne("RestaurantDashboardApi.Domain.Entities.WaiterWorkStatus", "WaiterWorkStatus")
+                        .WithMany()
+                        .HasForeignKey("WaiterWorkStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Restaurant");
+
+                    b.Navigation("WaiterWorkStatus");
                 });
 
             modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.Desk", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("Order")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.Order", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("RestaurantDashboardApi.Domain.Entities.Restaurant", b =>

@@ -9,8 +9,9 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Desk.Command.UpdateCo
 {
     public class UpdateDeskCommandRequest : IRequest
     {
-        public int Id { get; set; }
+
         public string DeskName { get; set; }
         public bool IsFull { get; set; }
+        public int  RestaurantId { get; set; }
     }
 }

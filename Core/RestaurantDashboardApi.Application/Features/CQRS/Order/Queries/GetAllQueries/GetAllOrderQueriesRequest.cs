@@ -9,5 +9,6 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Order.Queries.GetAllQ
 {
     public class GetAllOrderQueriesRequest : IRequest<IList<GetAllOrderQueriesResponse>>
     {
+        public int RestaurantId { get; set; }
     }
 }

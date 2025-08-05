@@ -25,7 +25,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Order.Command.UpdateC
             gt.TotalPrice = request.TotalPrice;
             gt.UpdatedAt = DateTime.Now - gt.OrderDate;
             gt.OrderStatusId = request.OrderStatusId;
-            gt.Items = request.Items;
+            gt.OrderItems = request.Items;
             await unitOfWork.GetWriteRepository<RestaurantDashboardApi.Domain.Entities.Order>().UpdateAsync(gt);
             await unitOfWork.SaveAsync();
         }

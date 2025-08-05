@@ -9,13 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantDashboardApi.Application.Features.CQRS.Waiter.Command.DeleteCommand;
 using RestaurantDashboardApi.Application.Features.CQRS.Waiter.Command.UpdateCommand;
+using RestaurantDashboardApi.Application.Features.CQRS.Waiter.Command.UpdateCommand.WaiterWorkStatusUpdate;
 using RestaurantDashboardApi.Application.Features.CQRS.Waiter.Queries;
 using RestaurantDashboardApi.Domain.Entities;
 using RestaurantDashboardApi.Persistence.AppDbContext;
 
 namespace RestaurantDashboardApi.API.Controllers
 {
-    [Authorize(Roles ="RestaurantCase , SystemAdmin")]
+    [Authorize(Roles ="SystemAdmin,Waiter,RestaurantCase")]
     [Route("api/[controller]")]
     [ApiController]
     public class WaitersController : ControllerBase
@@ -29,24 +30,24 @@ namespace RestaurantDashboardApi.API.Controllers
 
         // GET: api/Waiters
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Waiter>>> GetWaiters(GetAllWaiterCommandRequest req)
+        public async Task<ActionResult<IEnumerable<Waiter>>> GetWaiters(int RestaurantId)
         {
-
-            return Ok(await _context.Send(req));
+            GetAllWaiterCommandRequest request = new() { RestaurantId = RestaurantId};  
+            
+            return Ok(await _context.Send(request));
         }
 
 
 
-        // PUT: api/Waiters/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutWaiter(UpdateWaiterCommandHandler upt)
+
+        [HttpPut("Email")]
+        public async Task<IActionResult> PutWaiterWorkStatus([FromBody] string email)
         {
+            UpdateWaiterWorkStatusRequest upt = new() { Email = email };
 
             await _context.Send(upt);
             return NoContent();
         }
-
 
 
         // DELETE: api/Waiters/5

@@ -13,6 +13,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Order.Command.CreateC
         public int OrderStatusId { get; set; }
         public DateTime OrderDate { get; set; }
         public int WaiterId {  get; set; }
-        public ICollection<RestaurantDashboardApi.Domain.Entities.OrderItem> Items { get; set; }
+        public ICollection<OrderItemCreateRequest> Items { get; set; }
+        public int DeskId { get; set; }
     }
 }

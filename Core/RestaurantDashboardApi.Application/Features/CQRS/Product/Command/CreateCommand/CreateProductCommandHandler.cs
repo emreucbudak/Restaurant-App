@@ -19,7 +19,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Product.Command.Creat
 
         public async Task Handle(CreateProductCommandRequest request, CancellationToken cancellationToken)
         {
-            var ts = new RestaurantDashboardApi.Domain.Entities.Product(request.ProductName, request.ProductDescription, request.ProductPrice, request.ProductCategoryId);
+            var ts = new RestaurantDashboardApi.Domain.Entities.Product(request.ProductName, request.ProductDescription, request.ProductPrice, request.ProductCategoryId,request.RestaurantId);
             await _unitOfWork.GetWriteRepository<RestaurantDashboardApi.Domain.Entities.Product>().AddAsync(ts);
             await _unitOfWork.SaveAsync();
                 

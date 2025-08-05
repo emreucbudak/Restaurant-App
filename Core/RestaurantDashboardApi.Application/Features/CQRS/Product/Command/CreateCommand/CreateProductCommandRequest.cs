@@ -13,5 +13,6 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Product.Command.Creat
         public string ProductDescription { get; set; }
         public int ProductPrice { get; set; }
         public int ProductCategoryId { get; set; }
+        public int RestaurantId { get; set; }
     }
 }

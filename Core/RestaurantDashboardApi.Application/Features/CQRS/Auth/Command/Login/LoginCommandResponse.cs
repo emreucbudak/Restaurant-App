@@ -11,5 +11,7 @@ namespace RestaurantDashboardApi.Application.Features.CQRS.Auth.Command.Login
         public string Token { get; set; }
         public string RefreshToken { get; set; }
         public DateTime Expiration { get; set; }
+        public int? RestaurantId { get; set; }
+        public int? UserId { get; set; }
     }
 }
